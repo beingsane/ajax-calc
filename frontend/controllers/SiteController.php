@@ -6,6 +6,8 @@ use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
+use common\components\calculator\Calculator;
+use common\components\calculator\CalculatorException;
 
 /**
  * Site controller
@@ -20,7 +22,9 @@ class SiteController extends Controller
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
-                'actions' => [],
+                'actions' => [
+                    'calc-expression' => ['get'],
+                ],
             ],
         ];
     }
@@ -45,5 +49,24 @@ class SiteController extends Controller
     public function actionIndex()
     {
         return $this->render('index');
+    }
+
+    /**
+     * Calculates arithmetical expression and sends result in JSON
+     */
+    public function actionCalcExpression()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $expression = Yii::$app->request->post('expression');
+        $calculator = new Calculator();
+        try {
+            $value = $calculator->calculate($expression);
+            $result = ['status' => 'success', 'value' => $value];
+        } catch (CalculatorException $ex) {
+            $result = ['status' => 'error', 'message' => $ex->getMessage()];
+        }
+
+        return $result;
     }
 }
