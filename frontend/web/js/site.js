@@ -1,8 +1,6 @@
 
 function showResult(result)
 {
-    alert(typeof(result));
-
     if (typeof(result) == 'object') {
         if (result.status == 'success') {
             message = result.value;
@@ -21,19 +19,31 @@ $(document).ready(function() {
     $('.site-index .btn-calc-expression').click(function() {
         var expression = $('#expression').val();
 
-        var url = $(this).data('action-url');
-        $.ajax({
-            url: url,
-            jsonp: 'callback',
-            dataType: 'jsonp',
-            data: {expression: expression}
-        })
-        .success(function(result) {
-            showResult(result);
-        })
-        .error(function(e, a, b) {
-            message = 'Произошла ошибка при передаче данных';
-            $('#expression-result').html(message);
-        });
+        var taskVariant = $('#task-variant').val();
+
+        var ajaxSettings;
+        if (taskVariant == 'simple') {
+            ajaxSettings = {
+                url: $(this).data('action-url'),
+                data: {expression: expression}
+            }
+        } else {
+            ajaxSettings = {
+                url: $(this).data('api-action-url'),
+                data: {expression: expression},
+                jsonp: 'callback',
+                dataType: 'jsonp'
+            }
+        }
+
+
+        $.ajax(ajaxSettings)
+            .success(function(result) {
+                showResult(result);
+            })
+            .error(function(e, a, b) {
+                message = 'Произошла ошибка при передаче данных';
+                $('#expression-result').html(message);
+            });
     });
 });
