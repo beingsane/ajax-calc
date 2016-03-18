@@ -2,8 +2,6 @@
 namespace frontend\controllers;
 
 use Yii;
-use yii\base\InvalidParamException;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use common\components\calculator\Calculator;
@@ -58,7 +56,7 @@ class SiteController extends Controller
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        $expression = Yii::$app->request->post('expression');
+        $expression = Yii::$app->request->get('expression');
         $calculator = new Calculator();
         try {
             $value = $calculator->calculate($expression);
