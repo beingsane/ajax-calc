@@ -13,5 +13,5 @@ $this->title = 'My Yii Application';
 
     <br>
 
-    <button type="button" class="btn btn-success btn-calc-expression" data-action-url="<?= Url::to('site/calc-expression') ?>">Отправить</button>
+    <button type="button" class="btn btn-success btn-calc-expression" data-action-url="<?= Url::to('http://api.ajax-calc.local/site/calc-expression') ?>">Отправить</button>
 </div>
